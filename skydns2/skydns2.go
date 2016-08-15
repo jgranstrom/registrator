@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"gopkg.in/coreos/go-etcd.v2/etcd"
+	"github.com/coreos/go-etcd/etcd"
 	"github.com/gliderlabs/registrator/bridge"
 )
 
