@@ -60,7 +60,7 @@ func serviceMetaData(config *dockerapi.Config, port string) (map[string]string, 
 	return metadata, metadataFromPort
 }
 
-func servicePort(container *dockerapi.Container, port dockerapi.Port, published []dockerapi.PortBinding) ServicePort {
+func servicePort(container *dockerapi.Container, port dockerapi.Port, published []dockerapi.PortBinding, network string) ServicePort {
 	var hp, hip, ep, ept, eip, nm string
 	if len(published) > 0 {
 		hp = published[0].HostPort
@@ -74,7 +74,9 @@ func servicePort(container *dockerapi.Container, port dockerapi.Port, published 
 	//detect if container use overlay network, than set HostIP into NetworkSettings.Network[string].IPAddress
 	//better to use registrator with -internal flag
 	nm = container.HostConfig.NetworkMode
-	if nm != "bridge" && nm != "default" && nm != "host" {
+	if len(network) > 0 {
+		hip = container.NetworkSettings.Networks[network].IPAddress
+	} else if nm != "bridge" && nm != "default" && nm != "host" {
 		hip = container.NetworkSettings.Networks[nm].IPAddress
 	}
 
